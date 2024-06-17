@@ -20,6 +20,13 @@ const row = (bill) => {
   }
 
 const rows = (data) => {
+
+  if (data && data.length) {
+    data.sort(function (a, b) {
+      return new Date(a.date)-new Date(b.date)
+    })
+    data.reverse()
+  }
   return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
 }
 

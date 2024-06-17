@@ -17,12 +17,13 @@ export default class {
   }
 
   handleClickNewBill = () => {
-    this.onNavigate(ROUTES_PATH['NewBill'])
+    this.onNavigate(ROUTES_PATH.NewBill)
   }
 
   handleClickIconEye = (icon) => {
     const billUrl = icon.getAttribute("data-bill-url")
     const imgWidth = Math.floor($('#modaleFile').width() * 0.5)
+    console.log(billUrl, $('#modaleFile').find(".modal-body"));
     $('#modaleFile').find(".modal-body").html(`<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} alt="Bill" /></div>`)
     $('#modaleFile').modal('show')
   }
@@ -44,7 +45,7 @@ export default class {
             } catch(e) {
               // if for some reason, corrupted data was introduced, we manage here failing formatDate function
               // log the error and return unformatted date in that case
-              console.log(e,'for',doc)
+              console.log(e, 'for', doc)
               return {
                 ...doc,
                 date: doc.date,
