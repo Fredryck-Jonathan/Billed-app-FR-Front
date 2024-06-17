@@ -5,10 +5,6 @@
 import { fireEvent, screen, waitFor } from "@testing-library/dom"
 
 import userEvent from '@testing-library/user-event'
-
-
-
-
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
 import Bills from "../containers/Bills.js"
@@ -54,7 +50,7 @@ describe("Given I am connected as an employee", () => {
       const windowClass = windowIcon.getAttribute("class")
       expect(windowClass).toBe('active-icon')
     })
-    
+
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills })
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
@@ -110,9 +106,7 @@ describe("Given I am connected as an employee", () => {
     })
   })
 
-
   //test d'intégration GET
-
     describe("When I navigate to Bills page", () => {
       test("fetches bills from mock API GET", async () => {
         localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "e@e" }));
@@ -123,15 +117,10 @@ describe("Given I am connected as an employee", () => {
         window.onNavigate(ROUTES_PATH.Bills)
         await waitFor(() => screen.getByText("Mes notes de frais"))
         expect(screen.getByTestId("btn-new-bill")).toBeTruthy()
-        
         const tbody = screen.getByTestId("tbody")
-        
         expect(tbody).toBeTruthy()
-
         expect(screen.getByRole('row' , {name: "Hôtel et logement encore 2004-04-04 400 € pending"})).toBeTruthy()
       })
-
-
 
     describe("When an error occurs on API", () => {
       beforeEach(() => {

@@ -2,17 +2,12 @@
  * @jest-environment jsdom
  */
 import { fireEvent, screen, waitFor } from "@testing-library/dom"
-import { ROUTES, ROUTES_PATH } from "../constants/routes"
-import userEvent from '@testing-library/user-event'
-import { bills } from "../fixtures/bills"
-import {getBills} from "../containers/Bills.js"
+import { ROUTES} from "../constants/routes"
 import NewBillUI from "../views/NewBillUI.js"
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import NewBill from "../containers/NewBill.js"
 import mockStore from "../__mocks__/store"
-import BillsUI from "../views/BillsUI.js"
-import { readyException } from "jquery"
-import router from "../app/Router.js";
+
 
 jest.mock("../app/store", () => mockStore)
 
@@ -20,14 +15,12 @@ describe("Given I am connected as an employee", () => {
   
   describe("When I am on NewBill Page", () => {
     
-    
     test("Then the page is charged", async () => {
       const html = NewBillUI()
       document.body.innerHTML = html
       await waitFor(() => screen.getByText("Envoyer une note de frais"))
       expect(screen.getByTestId('form-new-bill')).toBeTruthy
     })
-
 
     test("Then i upload a file in a good format", async () => {
       const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => { });
@@ -91,77 +84,42 @@ describe("Given I am connected as an employee", () => {
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
-
       const newBill = new NewBill({
         document, onNavigate, store: mockStore, localStorage: window.localStorage
       })
-
-
       document.body.innerHTML = NewBillUI()
       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e))
       const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e))
       await waitFor(() => screen.getByText("Envoyer une note de frais"))
-
       expect(screen.getByTestId('expense-type').value).toBe('Transports')
-
       const nameInput = screen.getByTestId('expense-name')
       fireEvent.change(nameInput, { target: { value: 'volTuCoco' } })
-
-      
       const dateInput = screen.getByTestId('datepicker')
       fireEvent.change(dateInput, { target: { value: '2021-11-23' } })
-
-
       const amountInput = screen.getByTestId('amount')
       fireEvent.change(amountInput, { target: { value: '348' } })
-
-      
       const vatInput = screen.getByTestId('vat')
       fireEvent.change(vatInput, { target: { value: '70' } })
-
-
-
       const pctInput = screen.getByTestId('pct')
       fireEvent.change(pctInput, { target: { value: '20' } })
-
-
       const commentaryInput = screen.getByTestId('commentary')
       fireEvent.change(commentaryInput, { target: { value: 'Un vol plutot sympatique !' } })
-
-
       const fileInput = screen.getByTestId('file');
       const file = new File(['hello'], 'hello.png', { type: 'image/png' });
       fileInput.addEventListener('change',handleChangeFile)
       fireEvent.change(fileInput, { target: { files: [file] } });
-      //await userEvent.upload(changeFileInput, file)
-
-
       const formSubmit = screen.getByTestId("form-new-bill")
       expect(formSubmit).toBeTruthy()
       formSubmit.addEventListener('submit', handleSubmit)
       fireEvent.submit(formSubmit)
-      
-      console.log(alertMock.mock.calls);
-
       expect(handleSubmit).toHaveBeenCalledTimes(1);
-      
       expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
-
-      //expect(consoleSpy).toHaveBeenCalledWith('fonction bonjour')
       await new Promise(resolve => setTimeout(resolve, 100));
-
       await waitFor(() => screen.getByText("Mes notes de frais"))
-
       expect(screen.getByText("Mes notes de frais")).toBeTruthy()
-
       const tbody = screen.getByTestId('tbody')
-
       expect(tbody).toBeTruthy()
-
-      //expect(screen.getByRole('row', {name: "Hôtel et logement encore 2004-04-04 400 € pending"}).length).toBeTruthy()
-
     })
-
   })
 })
 
