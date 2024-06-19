@@ -94,15 +94,10 @@ describe("Given I am connected as an employee", () => {
       const handleClickIconEye = jest.fn(() => { billsObject.handleClickIconEye(icon); });
       icon.addEventListener('click', () => handleClickIconEye(icon))
       userEvent.click(icon)
-
       const imgElement = screen.getByAltText('Bill');
-      
       expect(imgElement).toBeTruthy()
-
       const srcImgElement = imgElement.getAttribute('src');
-
       expect(srcImgElement).toBe(imgUrl)
-      //expect(handleClickIconEye).toHaveBeenCalled()*/
     })
   })
 
